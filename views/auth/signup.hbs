@@ -3,29 +3,29 @@
   <form action="/signup" method="POST" id="form-container" class="auth-forms">
     <h1>Welcome to Job-Logger</h1>
 
-    <label for="username">Username:</label>
+    <label for="username">Username:*</label>
     <input id="username" type="text" name="username">
 
-    <label for="password">Password:</label>
+    <label for="password">Password:*</label>
     <input id="password" type="password" name="password">
 
     <h3>Personal details</h3>
    
-    <label for="firstlName">First Name</label>
-    <input id="firstlName" type="firstlName" name="firstlName">
-    <label for="surlName">Surname</label>
-    <input id="surlName" type="surlName" name="surlName">
+    <label for="firstName">First Name:*</label>
+    <input id="firstName" type="text" name="firstName">
+    <label for="surName">Surname:*</label>
+    <input id="surName" type="text" name="surName">
     <h3>Address</h3>
-    <label for="street">Street</label>
-    <input id="street" type="street" name="street">
-    <label for="city">City</label>
-    <input id="city" type="city" name="city">
-    <label for="zip">Zip</label>
-    <input id="zip" type="zip" name="zip">
+    <label for="street">Street:</label>
+    <input id="street" type="text" name="street">
+    <label for="city">City:</label>
+    <input id="city" type="text" name="city">
+    <label for="zip">Zip:</label>
+    <input id="zip" type="number" name="zip">
 
 
-    {{#if errorMessage}}
-    <div>{{errorMessage}}</div>
+    {{#if message}}
+    <h4 style="color: red">{{message}}</h4>
     {{/if}}
 
     <button type="submit">Create account</button>
@@ -33,6 +33,8 @@
     <p>
       Already have an account?
       <a href="/login">Login</a>
+      <br>
+      * required
     </p>
   </form>
 </div>

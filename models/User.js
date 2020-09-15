@@ -11,10 +11,7 @@ const userSchema = new Schema({
     zip: Number,
   },
   jobs: [{
-    title: String,
-    company: String,
-    location: String,
-    salary: Number,
+    jobID: Object,
   }],
 });
 

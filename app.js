@@ -16,7 +16,7 @@ const flash        = require('connect-flash');
 const hbs          = require('hbs');
 
 mongoose
-  .connect('mongodb://localhost/joblogger', {
+  .connect(process.env.DBACCESS || 'mongodb://localhost/joblogger', {
     useUnifiedTopology: true,
     useNewUrlParser: true
   })
