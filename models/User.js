@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+
 const userSchema = new Schema({
   username: String,
   password: String,
@@ -10,9 +11,10 @@ const userSchema = new Schema({
     city: String,
     zip: Number,
   },
-  jobs: [{
-    jobID: Object,
-  }],
+  jobs: {
+    type: Schema.Types.ObjectId,
+    ref: 'JobSchema'
+  },
 });
 
 const User = mongoose.model('User', userSchema);

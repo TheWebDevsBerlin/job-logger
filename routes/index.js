@@ -64,14 +64,18 @@ router.get('/', (req, res, next) => {
     });
   });
 
+router.get('/search', (req, res, next) => {
+  console.log("SEARCH");
+  res.render('index', {user:""});
+});
 
-  router.get("/private-page", (req, res) => {
-    if (!req.user) {
-      res.redirect('auth/login');
-    }
-    res.render("private", {
-      user: req.user
-    });
+router.get("/private-page", (req, res) => {
+  if (!req.user) {
+    res.redirect('auth/login');
+  }
+  res.render("private", {
+    user: req.user
   });
+});
 
 module.exports = router;
