@@ -1,0 +1,60 @@
+  <section>
+    {{#with data}}
+      <div class="full" id="">
+        <div class="">
+          <div class="header">
+            <figure>
+              {{#if company_logo}}
+                <img src="{{company_logo}}" alt="logo of {{company}}">
+              {{else}}
+                <img src="//logo.clearbit.com/{{logoUrl}}" alt="placeholder" onerror="this.src='/images/placeholder.png'">
+              {{/if}}
+            </figure>
+            <div>
+              {{#if title}}
+                <h2>{{title}}</h2>
+              {{/if}}
+
+              {{#if company.name}}
+                <h3><a href="{{company.websiteUrl}}">{{company.name}}</a></h3>
+              {{/if}}
+
+              {{#if commitment.title}}
+                <b>{{commitment.title}}</b>
+              {{/if}}
+            </div>
+          </div>
+            
+          <div class="info">
+            {{#if description}}
+              <p>{{{filter description "markdown"}}}</p>
+            {{/if}}
+
+            {{#if applyUrl}}
+              <p><a href="{{applyUrl}}">Apply now</a></p>
+            {{/if}}
+
+            {{#if url}}
+              <a href="{{url}}"><small></small>Source</a>
+            {{/if}}
+
+            {{#if cities}}
+              Locations:
+                {{#each cities}}
+                  <span>{{name}}, {{country.name}} </span>
+                {{/each}}
+              <br>
+            {{/if}}
+            {{#if postedAt}}
+              <time datetime="{{postedAt}}"><span>Published at {{postedAt}}</span></time>
+            {{/if}}
+          </div>
+          <div class="controls">
+            <a href="/position/{{company.slug}}/{{slug}}">Full View</a>
+            <a href="/favorite/{{id}}">Add to list</a>
+            <a href="/status/{{id}}">Status</a>
+          </div>
+        </div>
+      {{/with}}
+    </div>
+  </section>

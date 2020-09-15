@@ -1,0 +1,20 @@
+<div class="auth">
+  <form action="/login" method="POST" class="auth-forms">
+
+    <label for="username">Username:</label>
+    <input type="text" name="username" id="username">
+
+    <label for="password">Password:</label>
+    <input type="password" name="password">
+
+    <button type="submit">Log In</button>
+
+    {{#if message}}
+    <p style="color: red">{{message}}</p>
+    {{/if}}
+    
+    <p>Dont have an accout? <a href="/signup">Sign Up</a> </p>
+
+  </form>
+
+</div>

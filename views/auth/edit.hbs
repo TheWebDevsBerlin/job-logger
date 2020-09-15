@@ -1,0 +1,10 @@
+<div class="auth">
+  {{#with name}}
+  <form action="/user/edit" method="POST" class="auth-forms">
+    <label for="title">New username:</label>
+    <input type="text" name="username" id="username" value="{{username}}">
+
+    <button type="submit">Update username</button>
+  </form>
+  {{/with}}
+</div> 

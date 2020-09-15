@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/stylesheets/style.css" />
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+  <script defer src="{{googleMapsApi}}"></script>
+  <script src="/javascripts/script.js"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>{{title}}</h1>
+        <nav>
+          {{#if user}}
+          {{user.name}}
+          {{/if}}
+          {{#unless user}}
+          <a href="/login">Login</a>
+          <a href="/signup">Sign Up</a>
+          {{else}}
+          <a href="/logout">Logout</a>
+          {{!-- place holder
+          <a href="/myJobs">My Jobs</a>
+          <a href="/edit">edit username</a>
+          <a href="/delete">delete account</a> --}}
+          {{/unless}}
+        </nav>
+    </header>
+    {{{body}}}
+  </main>
+</body>
+</html>

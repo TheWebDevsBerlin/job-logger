@@ -1,0 +1,23 @@
+<div class="auth">
+
+  <form action="/signup" method="POST" id="form-container" class="auth-forms">
+    <h2>Find your new career today!</h2>
+
+    <label for="username">Username:</label>
+    <input id="username" type="text" name="username">
+
+    <label for="password">Password:</label>
+    <input id="password" type="password" name="password">
+
+    {{#if errorMessage}}
+    <div>{{errorMessage}}</div>
+    {{/if}}
+
+    <button type="submit">Create account</button>
+
+    <p>
+      Already have an account?
+      <a href="/login">Login</a>
+    </p>
+  </form>
+</div>
