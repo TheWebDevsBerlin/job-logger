@@ -51,7 +51,7 @@ router.post('/signup', (req, res) => {
           })
           .then((dbUser) => {
             req.session.user = dbUser
-            console.log("this is the", req.session.user);
+            console.log(req.session.user);
             // req.login();
             res.redirect('/')
           })
@@ -118,7 +118,7 @@ router.post("/login", (req, res, next) => {
     return;
   }
 
-  User.findOne({ user: username })
+  User.findOne({ username : username })
     .then((user) => {
       if (!user) {
         res.render('auth/login', {
