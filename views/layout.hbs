@@ -13,20 +13,25 @@
 <body>
   <main>
     <header>
-      <h1>{{title}}</h1>
-        <nav>
-          {{#unless user}}
-          <a href="/login">Login</a>
-          <a href="/signup">Sign Up</a>
-          {{else}}
-          <b>Logged in as {{user.username}}</b>&nbsp;
-          <a href="/logout">Logout</a>
-          {{!-- place holder
-          <a href="/myJobs">My Jobs</a>
-          <a href="/edit">edit username</a>
-          <a href="/delete">delete account</a> --}}
-          {{/unless}}
-        </nav>
+      <div class="left">
+        <h1>{{title}}</h1>
+      </div>
+      <nav>
+        {{#unless user}}
+        <a href="/login">Login</a>
+        <a href="/signup">Sign Up</a>
+        {{else}}
+        <b>Logged in as {{user.username}}</b>&nbsp;
+        {{#unless dashboard}}
+          <a href="/user/dashboard">My Dashboard</a>
+        {{/unless}}
+        <a href="/logout">Logout</a>
+        {{!-- place holder
+        <a href="/myJobs">My Jobs</a>
+        <a href="/edit">edit username</a>
+        <a href="/delete">delete account</a> --}}
+        {{/unless}}
+      </nav>
     </header>
     {{{body}}}
   </main>
