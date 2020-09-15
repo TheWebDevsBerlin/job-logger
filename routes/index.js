@@ -56,7 +56,7 @@ router.get('/', (req, res, next) => {
     res.render('index',{
       data, 
       googleMapsApi,
-      user: req.user
+      user: req.session.user
     });
   })
     .catch((err) => {

@@ -12,7 +12,6 @@ router.get('/signup', (req, res) => {
 
 router.get('/login', (req, res) => {
   res.render('auth/login', {
-    message: req.flash('error')
   });
 });
 
@@ -50,12 +49,11 @@ router.post('/signup', (req, res) => {
             username: username,
             password: hash
           })
-          .then(dbUser => {
-            console.log(dbUser);
+          .then((dbUser) => {
+            req.session.user = dbUser
+            console.log("this is the", req.session.user);
             // req.login();
-            res.render('auth/login', {
-              user: dbUser
-            });
+            res.redirect('/')
           })
       }
     })
@@ -97,7 +95,7 @@ router.post(
   }
 );
 
-router.get('/delete/', (req, res) => {
+router.get('/delete', (req, res) => {
   const id = req.user._id;
   User.findByIdAndDelete(id)
     .then(() => {
@@ -110,14 +108,41 @@ router.get('/delete/', (req, res) => {
 });
 
 
-router.post("/login", passport.authenticate("local", {
-  successRedirect: "/",
-  failureRedirect: "/login",
-  failureFlash: true,
-}));
+router.post("/login", (req, res, next) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  if (username === "" || password === "") {
+    res.render("auth/login", {
+      message: "Please enter both a username and  a password to sign in.",
+    });
+    return;
+  }
+
+  User.findOne({ user: username })
+    .then((user) => {
+      if (!user) {
+        res.render('auth/login', {
+          message: "The username doesn't exist.",
+        });
+        return;
+      }
+      if (bcrypt.compareSync(password, user.password)) {
+        console.log(req.session);
+        req.session.user = user;
+        res.redirect('/');
+      } else {
+        res.render("auth/login", {
+          message: "Incorrect password",
+        });
+      }
+    })
+    .catch((error) => {
+      next(error);
+    });
+});
 
 router.get('/logout', (req, res) => {
-  req.logout();
+  req.session.destroy();
   res.redirect('/');
 });
 
