@@ -48,24 +48,7 @@ router.post('/signup', (req, res) => {
     });
     return;
   }
-  if (street === '') {
-    res.render('auth/signup', {
-      message: 'Please enter a street name'
-    });
-    return;
-  }
-  if (city === '') {
-    res.render('auth/signup', {
-      message: 'Please enter a city to help us tailor your job feed'
-    });
-    return;
-  }
-  if (zip === '') {
-    res.render('auth/signup', {
-      message: 'Please enter your zip to help us tailor your job feed'
-    });
-    return;
-  }
+
   User.findOne({
       username: username
     })
