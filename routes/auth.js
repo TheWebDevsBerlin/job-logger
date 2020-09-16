@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const Jobs = require('../models/Job');
 const bcrypt = require('bcrypt');
 
 
@@ -62,18 +63,40 @@ router.post('/signup', (req, res) => {
         const hash = bcrypt.hashSync(password, salt);
 
         User.create({
-            username: username,
-            password: hash
+            username,
+            password: hash,
+            firstName,
+            surName,
+            street,
+            city,
+            zip,
+            jobs: [{
+              id: {
+                title: '',
+                company: ''
+              },
+              data: {
+                title: '',
+                company: '',
+                location: '',
+                salary: 0,
+                description: '',
+                applyUrl: '',
+                websiteUrl: '',
+                logoUrl: '',
+                contact: '',
+                createdAt: new Date(),
+                updatedAt: new Date()
+              }
+            }]
           })
           .then((dbUser) => {
-            req.session.user = dbUser
-            console.log(req.session.user);
-            // req.login();
-            res.redirect('/')
-          })
+            req.session.user = dbUser;
+            res.redirect('/');
+          });
       }
-    })
-})
+    });
+});
 
 router.get('/edit', (req, res) => {
   const {

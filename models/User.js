@@ -11,10 +11,31 @@ const userSchema = new Schema({
     city: String,
     zip: Number,
   },
-  jobs: {
-    type: Schema.Types.ObjectId,
-    ref: 'JobSchema'
-  },
+  jobs: 
+    {
+      id: {
+        title: String,
+        company: String
+      },
+      data: {
+        title: String,
+        company: String,
+        location: String,
+        salary: Number,
+        description: String,
+        applyUrl: String,
+        websiteUrl: String,
+        logoUrl: String,
+        contact: String,
+        createdAt: Date,
+        updatedAt: Date
+      }
+    }
+  
+  // jobs: {
+  //   type: Schema.Types.ObjectId,
+  //   ref: 'JobSchema'
+  // },
 });
 
 const User = mongoose.model('User', userSchema);

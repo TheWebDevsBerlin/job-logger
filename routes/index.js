@@ -59,14 +59,73 @@ router.get('/', (req, res, next) => {
       user: req.session.user
     });
   })
-    .catch((err) => {
-      next(err); 
-    });
+  .catch((err) => {
+    next(err); 
   });
+});
 
-router.get('/search', (req, res, next) => {
-  console.log("SEARCH");
-  res.render('index', {user:""});
+router.post('/search', (req, res, next) => {
+  const { location, title } = req.body;
+
+  axios({
+    url: 'https://api.graphql.jobs/',
+    method: 'POST',
+    data: {
+    query: `
+      query {
+        city(input: {slug: "${location.toLowerCase()}"}) {
+          name
+          jobs(where: {slug_contains: "${title.toLowerCase()}"}) {
+            title
+            slug
+            commitment{
+              title
+            }
+            description
+            applyUrl
+            company{
+              name
+              websiteUrl
+              jobs{title}
+              logoUrl
+              slug
+              jobs{slug}
+            }
+            locationNames
+            remotes{name}
+            cities{
+              name
+              country {name}
+              type
+              slug
+              jobs {
+                id
+                title
+              }
+            }
+            postedAt
+          }
+        }
+      }
+    `}
+  })
+  .then(result => {
+    const data = result.data.data.city;
+    console.log("SEARCH", result.data.data.city.jobs);
+    for(let job of data.jobs) {
+      job.logoUrl = job.company.websiteUrl
+        .slice(job.company.websiteUrl.indexOf('//')+2);
+    }
+
+    res.render('index',{
+      data, 
+      googleMapsApi,
+      user: req.session.user
+    });
+  })
+  .catch((err) => {
+    next(err); 
+  });
 });
 
 router.get("/private-page", (req, res) => {

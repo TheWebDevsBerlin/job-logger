@@ -15,7 +15,8 @@ const hbs          = require('hbs');
 mongoose
   .connect(process.env.DBACCESS || 'mongodb://localhost/joblogger', {
     useUnifiedTopology: true,
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useFindAndModify: true
   })
   .then(x => {
     console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`);
@@ -76,7 +77,8 @@ app.use(
 app.locals.title = 'Job Logger';
 
 const index = require('./routes/index');
-app.get('/', index);
+app.use('/', index);
+
 const router = require('./routes/auth');
 app.use('/', router);
 

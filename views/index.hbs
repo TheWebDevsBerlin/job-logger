@@ -1,8 +1,8 @@
 <section onload="placeMarkers">
   <header class="search">
-    <form action="/search" method="get">
-      <input type="search" name="search_location" id="search_location" placeholder="Where?">
-      <input type="search" name="search_title" id="search_title" placeholder="What?">
+    <form action="/search" method="POST">
+      <input type="text" name="location" id="location" placeholder="Where?">
+      <input type="text" name="title" id="title" placeholder="What?">
       <button type="submit">Search</button>
     </form>
   </header>

@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const axios = require('axios');
+// const { render } = require('../app');
 // const Job = require('../models/Job');
 
+const googleMapsApi = `https://maps.googleapis.com/maps/api/js?key=${process.env.API_KEY}&callback=initMap&libraries=places&v=weekly`;
 
 router.get('/dashboard', (req,res,next) => {
   if(!req.session.user) res.redirect('/login');
@@ -23,7 +26,6 @@ router.get('/dashboard', (req,res,next) => {
 
 router.get('/job/add/:title/:company', (req,res,next) => {
   if(!req.session.user) res.redirect('/login');
-console.log('ADD JOB!');
   const {title, company} = req.params;
 
   axios({
@@ -31,97 +33,80 @@ console.log('ADD JOB!');
     method: 'POST',
     data: {
       query: `
-        query job {job(input:{
+        query {
+          job(input:{
             jobSlug:"${title}"
             companySlug:"${company}"
-          }){
+          }) {
+          title
+          commitment {
             title
-            commitment{
-              title
-              slug
-              createdAt
-              updatedAt
-            }
-            cities{
-              id
-              name
-              slug
-              country{id}
-              type
-              jobs{id}
-              createdAt
-              updatedAt
-            }
-            countries{
-              id
-              name
-              slug
-              type
-              isoCode
-              cities{id}
-              jobs{id}
-              createdAt
-              updatedAt
-            }
-            remotes{
-              id
-              name
-              slug
-              type
-              jobs{id}
-              createdAt
-              updatedAt
-            }
-            applyUrl
-            company{
-              id
-              name
-              slug
-              websiteUrl
-              logoUrl
-              jobs{id}
-              twitter
-              emailed
-              createdAt
-              updatedAt
-            }
-            tags{
-              id
-              name
-              slug
-              jobs{id}
-              createdAt
-              updatedAt
-            }
-            isPublished
-            userEmail
-            postedAt
-            createdAt
-            updatedAt
-            description
-            locationNames
-          }}
+            slug
+          }
+          cities {
+            name
+            slug
+            type
+          }
+          countries {
+            name
+            slug
+            type
+            isoCode
+          }
+          remotes {
+            name
+            slug
+            type
+          }
+          applyUrl
+          company {
+            name
+            slug
+            websiteUrl
+            logoUrl
+            twitter
+            emailed
+          }
+          tags {
+            name
+            slug
+          }
+          isPublished
+          userEmail
+          postedAt
+          createdAt
+          updatedAt
+          description
+          locationNames
+        }
+      }
     `}
   })
   .then(result => {
-    
-  });
+    const data = result.data.data.job;
 
-  User.findOneAndUpdate({_id: req.session.user._id})
-    .populate('jobs')
-    .then(user => {
-      axios({})
-        .then()
+    console.log({result: data});
+    User.findByIdAndUpdate({_id: req.session.user._id})
+      .populate('jobs')
+      .then(user => {
+        console.log({
+          id: {
+            slug: data.slug,
+            company: data.company.slug
+          },
+          data: {
+            ...data
+          }
+        });
+        if(!user.jobs) user.jobs = [];
+        user.jobs.push(1);
+        res.render('user/dashboard', {
+          jobs: user.jobs.data
+        })
         .catch(err => next(err));
-
-      console.log(user);
-      res.render('user/dashboard', {
-        jobs: user.jobs,
-        user: req.session.user,
-        dashboard: true
-    })
-    .catch(err => next(err));
-  });
+      });
+    });
 });
 
 module.exports = router;
