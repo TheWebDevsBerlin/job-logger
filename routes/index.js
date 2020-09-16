@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
-
+const {searchByLocation, allJobs} = require('../queries');
 const googleMapsApi = `https://maps.googleapis.com/maps/api/js?key=${process.env.API_KEY}&callback=initMap&libraries=places&v=weekly`;
 
 router.get('/', (req, res, next) => {
@@ -9,42 +9,7 @@ router.get('/', (req, res, next) => {
     url: 'https://api.graphql.jobs/',
     method: 'POST',
     data: {
-      query: `
-      query {
-        jobs(input: {
-          type:""
-        }){
-          title
-          slug
-          commitment{
-            title
-          }
-          description
-          applyUrl
-          company{
-            name
-            websiteUrl
-            jobs{title}
-            logoUrl
-            slug
-            jobs{slug}
-          }
-          locationNames
-          remotes{name}
-          cities{
-            name
-            country {name}
-            type
-            slug
-            jobs {
-              id
-              title
-            }
-          }
-          postedAt
-        }
-      }
-      `
+      query: allJobs('')
     }
   })
   .then((result) => {
@@ -71,62 +36,69 @@ router.post('/search', (req, res, next) => {
     url: 'https://api.graphql.jobs/',
     method: 'POST',
     data: {
-    query: `
-      query {
-        city(input: {slug: "${location.toLowerCase()}"}) {
-          name
-          jobs(where: {slug_contains: "${title.toLowerCase()}"}) {
-            title
-            slug
-            commitment{
-              title
-            }
-            description
-            applyUrl
-            company{
-              name
-              websiteUrl
-              jobs{title}
-              logoUrl
-              slug
-              jobs{slug}
-            }
-            locationNames
-            remotes{name}
-            cities{
-              name
-              country {name}
-              type
-              slug
-              jobs {
-                id
-                title
-              }
-            }
-            postedAt
-          }
-        }
-      }
-    `}
+      query: searchByLocation((location || '').toLowerCase(),(title || '').toLowerCase())
+    }
   })
   .then(result => {
     const data = result.data.data.city;
-    console.log("SEARCH", result.data.data.city.jobs);
-    for(let job of data.jobs) {
-      job.logoUrl = job.company.websiteUrl
-        .slice(job.company.websiteUrl.indexOf('//')+2);
-    }
+    if(data) {
+      console.log({data});
+      for(let job of data.jobs) {
+        job.logoUrl = job.company.websiteUrl
+          .slice(job.company.websiteUrl.indexOf('//')+2);
+      }
+    } 
+
+    const searchQuery = {location,title};
+    console.log(searchQuery);
 
     res.render('index',{
-      data, 
+      data,
+      searchQuery,
       googleMapsApi,
       user: req.session.user
     });
   })
   .catch((err) => {
-    next(err); 
+      // no city selected logic
+      axios({
+        url: 'https://api.graphql.jobs/',
+        method: 'POST',
+        data: {
+          query: allJobs(title)
+        }
+      })
+      .then(result => {
+        let jobs = [];
+        for(let city of result.data.data.cities){
+          for(let job of city.jobs){
+            jobs.push(job);
+          }
+        }
+        const data = {name: 'all', jobs: JSON.parse(JSON.stringify(jobs))};
+        const searchQuery = {location: '',title};
+    
+        data.jobs.parseCompanyLogoURLs();
+    
+        res.render('index',{
+          data,
+          searchQuery,
+          googleMapsApi,
+          user: req.session.user
+        });
+    
+      })
+      .catch(err => next(err)); 
   });
 });
+
+Array.portotype.parseCompanyLogoURLs = () => {
+  for(let job of this){
+    job.logoUrl = job.company.websiteUrl
+      .slice(job.company.websiteUrl.indexOf('//')+2);
+  }
+  return this;
+}
 
 router.get("/private-page", (req, res) => {
   if (!req.user) {

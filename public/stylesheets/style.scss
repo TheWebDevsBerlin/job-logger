@@ -128,26 +128,30 @@ nav, .left {
   flex-direction: column;
   align-items: center;
 
-  input {
+  input, select {
+    padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-    margin-bottom: 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
     width: clamp(250px, 100%, 400px);
     border: none;
     border-bottom: 1px dashed black;
   }
 
-  input:hover, input:focus {
+  input:hover, input:focus ,
+  select:hover, select:focus {
     background-color: rgba(128,128,128,0.25);
     border: none;
     border-bottom: 1px solid black;
   }
   
   button {
-    flex: 1;
+    width: 25rem;
     border-radius: 3px;
     border: none;
     padding: 0.5rem;
-    box-shadow: 2px 2px 7px 3px rgba(128,128,128,0.5);
+    margin-top: 0.5rem;
+    box-shadow: 2px 2px 7px 1px rgba(128, 128, 128, 0.5);
   }
 
   button:hover {

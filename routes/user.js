@@ -1,17 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
 const axios = require('axios');
-// const { render } = require('../app');
-// const Job = require('../models/Job');
+const {searchByID} = require('../queries');
 
-const googleMapsApi = `https://maps.googleapis.com/maps/api/js?key=${process.env.API_KEY}&callback=initMap&libraries=places&v=weekly`;
+const User = require('../models/User');
 
 router.get('/dashboard', (req,res,next) => {
   if(!req.session.user) res.redirect('/login');
 
   User.findOne({_id: req.session.user._id})
-    .populate('jobs')
     .then(user => {
       console.log(user);
       res.render('user/dashboard', {
@@ -21,7 +18,6 @@ router.get('/dashboard', (req,res,next) => {
     })
     .catch(err => next(err));
   });
-
 });
 
 router.get('/job/add/:title/:company', (req,res,next) => {
@@ -32,56 +28,8 @@ router.get('/job/add/:title/:company', (req,res,next) => {
     url: 'https://api.graphql.jobs/',
     method: 'POST',
     data: {
-      query: `
-        query {
-          job(input:{
-            jobSlug:"${title}"
-            companySlug:"${company}"
-          }) {
-          title
-          commitment {
-            title
-            slug
-          }
-          cities {
-            name
-            slug
-            type
-          }
-          countries {
-            name
-            slug
-            type
-            isoCode
-          }
-          remotes {
-            name
-            slug
-            type
-          }
-          applyUrl
-          company {
-            name
-            slug
-            websiteUrl
-            logoUrl
-            twitter
-            emailed
-          }
-          tags {
-            name
-            slug
-          }
-          isPublished
-          userEmail
-          postedAt
-          createdAt
-          updatedAt
-          description
-          locationNames
-        }
-      }
-    `}
+      query: searchByID(company,title)
+    }
   })
   .then(result => {
     const data = result.data.data.job;
