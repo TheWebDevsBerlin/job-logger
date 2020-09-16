@@ -13,11 +13,19 @@ router.get('/', (req, res, next) => {
     }
   })
   .then((result) => {
-    const data = result.data.data;
+    let jobs = [];
+    for(let city of result.data.data.cities){
+      for(let job of city.jobs){
+        jobs.push(job);
+      }
+    }
+    const data = {name: 'all', jobs: JSON.parse(JSON.stringify(jobs))};
+    
     for(let job of data.jobs){
       job.logoUrl = job.company.websiteUrl
         .slice(job.company.websiteUrl.indexOf('//')+2);
     }
+
     res.render('index',{
       data, 
       googleMapsApi,
@@ -78,8 +86,11 @@ router.post('/search', (req, res, next) => {
         const data = {name: 'all', jobs: JSON.parse(JSON.stringify(jobs))};
         const searchQuery = {location: '',title};
     
-        data.jobs.parseCompanyLogoURLs();
-    
+        for(let job of this){
+          job.logoUrl = job.company.websiteUrl
+            .slice(job.company.websiteUrl.indexOf('//')+2);
+        }
+          
         res.render('index',{
           data,
           searchQuery,
@@ -91,14 +102,6 @@ router.post('/search', (req, res, next) => {
       .catch(err => next(err)); 
   });
 });
-
-Array.portotype.parseCompanyLogoURLs = () => {
-  for(let job of this){
-    job.logoUrl = job.company.websiteUrl
-      .slice(job.company.websiteUrl.indexOf('//')+2);
-  }
-  return this;
-}
 
 router.get("/private-page", (req, res) => {
   if (!req.user) {

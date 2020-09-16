@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+
 const bcrypt = require('bcrypt');
 
 
@@ -69,25 +70,7 @@ router.post('/signup', (req, res) => {
             street,
             city,
             zip,
-            jobs: [{
-              id: {
-                title: '',
-                company: ''
-              },
-              data: {
-                title: '',
-                company: '',
-                location: '',
-                salary: 0,
-                description: '',
-                applyUrl: '',
-                websiteUrl: '',
-                logoUrl: '',
-                contact: '',
-                createdAt: new Date(),
-                updatedAt: new Date()
-              }
-            }]
+            jobs: []
           })
           .then((dbUser) => {
             req.session.user = dbUser;
