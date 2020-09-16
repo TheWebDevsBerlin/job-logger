@@ -1,0 +1,1 @@
+// DBACCESS=mongodb+srv://DanP20:R8xY2Dni8TklrQ4K@cluster0.p27z7.mongodb.net/joblogger?retryWrites=true&w=majority
