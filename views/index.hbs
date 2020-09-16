@@ -1,8 +1,8 @@
-<section onload="placeMarkers">
+<section>
   <header class="search">
     <form action="/search" method="POST">
-      <input type="text" name="location" id="location" placeholder="Where?">
-      <input type="text" name="title" id="title" placeholder="What?">
+      <select name="location" id="location"></select>
+      <input type="text" name="title" id="title" value="{{searchQuery.title}}" placeholder="Enter your desired title">
       <button type="submit">Search</button>
     </form>
   </header>
@@ -13,3 +13,4 @@
   </div>
   <div class="container" id="jobs-map"></div>
 </section>
+<script>populateSearchboxLocation("{{searchQuery.location}}");</script>

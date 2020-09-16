@@ -102,22 +102,26 @@ nav, .left {
   display: flex;
   flex-direction: column;
   align-items: center; }
-  .search form input {
+  .search form input, .search form select {
+    padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-    margin-bottom: 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
     width: clamp(250px, 100%, 400px);
     border: none;
     border-bottom: 1px dashed black; }
-  .search form input:hover, .search form input:focus {
+  .search form input:hover, .search form input:focus,
+  .search form select:hover, .search form select:focus {
     background-color: rgba(128, 128, 128, 0.25);
     border: none;
     border-bottom: 1px solid black; }
   .search form button {
-    flex: 1;
+    width: 25rem;
     border-radius: 3px;
     border: none;
     padding: 0.5rem;
-    box-shadow: 2px 2px 7px 3px rgba(128, 128, 128, 0.5); }
+    margin-top: 0.5rem;
+    box-shadow: 2px 2px 7px 1px rgba(128, 128, 128, 0.5); }
   .search form button:hover {
     background-color: rgba(128, 128, 128, 0.75); }
   .search form button:active {
