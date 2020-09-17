@@ -16,7 +16,10 @@ router.get('/:company/:job', (req, res, next) => {
       const data = result.data.data.job;
       data.logoUrl = data.company.websiteUrl.slice(data.company.websiteUrl.indexOf('//')+2);
   
-      res.render('jobDetails',{data});
+      res.render('jobDetails',{
+        data,
+        user: req.session.user
+      });
     })
     .catch(err => next(err));
 });
