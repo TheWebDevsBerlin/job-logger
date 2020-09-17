@@ -13,12 +13,12 @@
       <h2>{{job.data.title}}</h2>
       <h4>{{job.data.company.name}}</h4>
 
-      <p class="status">
-        <span id="{{id}}" status="0" class="active">Interested</span>
-        <span id="{{id}}" status="1">Applied</span>
-        <span id="{{id}}" status="2">On Going</span>
-        <span id="{{id}}" status="3">Unsuccessful</span>
-        <span id="{{id}}" status="4">Not interested anymore</span>
+      <p class="status" id="id-{{id}}">
+        <span status="0">Interested</span>
+        <span status="1">Applied</span>
+        <span status="2">On Going</span>
+        <span status="3">Unsuccessful</span>
+        <span status="4">Not interested anymore</span>
       </p>
     </div>
 
@@ -31,3 +31,4 @@
   {{/each}}
 
 </div>
+<script src="/javascripts/dashboard.js"></script>

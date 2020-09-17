@@ -1,87 +1,5 @@
-document.addEventListener('DOMContentLoaded', () => {
-
-  function addJobToUserList(e, responseAction = 'addAddBtn'){
-    e.preventDefault();
-    const slug = e.target.getAttribute('slug')
-    const companySlug = e.target.getAttribute('companySlug');
-
-    axios({
-      url: `/user/job/add/${slug}/${companySlug}`,
-      method: 'POST'
-    })
-    .then(res => {
-      console.log(res);
-      if(res.status === 200){
-        // delete element from list view
-        console.log(responseAction);
-        switch(responseAction) {
-          case "addRemoveBtn":
-            e.target.innerText = 'Remove from list';
-            e.target.removeEventListener("click", addJobToUserList);
-            e.target.addEventListener("click", removeJobFromUserList, 'addAddBtn');
-            break;
-          default: 
-            e.target.parentNode.parentNode.remove();
-        }
-      }
-    });
-  }
-
-  console.log('JS imported successfully!');
-
-  const addListViewButton = document.querySelectorAll(".add-job-to-list.list-view");
-  addListViewButton.forEach(button=>button.addEventListener("click", addJobToUserList));
-
-  const addFullViewButton = document.querySelectorAll(".add-job-to-list.full-view");
-  addFullViewButton.forEach(button=>button.addEventListener("click", addJobToUserList, 'addRemoveBtn'));
-
-  const addStatusButtons = document.querySelectorAll(".status span");
-  addStatusButtons.forEach(button=>button.addEventListener("click", updateStatusToTheDB));
-
-}, false);
-
 let map;
 let markers = [];
-
-function updateStatusToTheDB(e){
-  const jobId = e.target.getAttribute('id');
-  const status = e.target.getAttribute('status');
-  axios({
-    url: `/user/dashboard/statusUpdate/${jobId}/${status}`,
-    method: 'POST'
-  })
-  .then(res => {
-    console.log(res);
-  })
-  .catch(err=>{
-    console.log(err);
-  });
-}
-
-
-
-function populateSearchboxLocation(val) {
-  axios({
-    url: 'https://api.graphql.jobs/',
-    method: 'POST',
-    data: {
-    query: `
-      query allTheCities {
-        cities{name}
-      }
-    `}
-  })
-  .then(result => {
-    const elSearchBox = document.querySelector('select#location');
-    const cities = result.data.data.cities.sort((a,b) => a.name.localeCompare(b.name));
-    let options = `<option value='' ${!val?'selected="true"':''}">All location</option>`;
-
-    cities.forEach(city=>{
-      options+= `<option value="${city.name}" ${val.toLowerCase()===city.name.toLowerCase()?'selected="true"':''}>${city.name}</option>`;
-    });
-    elSearchBox.innerHTML = options;
-  });
-}
 
 function initMap() {
   var mapOptions = {
@@ -149,3 +67,84 @@ function updateMapPosition(location = "Berlin, Germany", jobTitle = "") {
     }
   });
 }
+
+function updateStatusToTheDB(e){
+  const jobId = e.target.parentNode.getAttribute('id');
+  const status = e.target.getAttribute('status');
+  axios({
+    url: `/user/dashboard/statusUpdate/${jobId}/${status}`,
+    method: 'POST'
+  })
+  .then(res => {
+    applyStatusToDashboard();
+    console.log(res);
+  })
+  .catch(err=>{
+    console.log(err);
+  });
+}
+
+function populateSearchboxLocation(val) {
+  axios({
+    url: 'https://api.graphql.jobs/',
+    method: 'POST',
+    data: {
+    query: `
+      query allTheCities {
+        cities{name}
+      }
+    `}
+  })
+  .then(result => {
+    const elSearchBox = document.querySelector('select#location');
+    const cities = result.data.data.cities.sort((a,b) => a.name.localeCompare(b.name));
+    let options = `<option value='' ${!val?'selected="true"':''}">All location</option>`;
+
+    cities.forEach(city=>{
+      options+= `<option value="${city.name}" ${val.toLowerCase()===city.name.toLowerCase()?'selected="true"':''}>${city.name}</option>`;
+    });
+    elSearchBox.innerHTML = options;
+  });
+}
+
+function addJobToUserList(e, responseAction = 'addAddBtn'){
+  e.preventDefault();
+  const slug = e.target.getAttribute('slug')
+  const companySlug = e.target.getAttribute('companySlug');
+
+  axios({
+    url: `/user/job/add/${slug}/${companySlug}`,
+    method: 'POST'
+  })
+  .then(res => {
+    console.log(res);
+    if(res.status === 200){
+      // delete element from list view
+      console.log(responseAction);
+      switch(responseAction) {
+        case "addRemoveBtn":
+          e.target.innerText = 'Remove from list';
+          e.target.removeEventListener("click", addJobToUserList);
+          e.target.addEventListener("click", removeJobFromUserList, 'addAddBtn');
+          break;
+        default: 
+          e.target.parentNode.parentNode.remove();
+      }
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  console.log('JS imported successfully!');
+
+  const addListViewButton = document.querySelectorAll(".add-job-to-list.list-view");
+  addListViewButton.forEach(button=>button.addEventListener("click", addJobToUserList));
+
+  const addFullViewButton = document.querySelectorAll(".add-job-to-list.full-view");
+  addFullViewButton.forEach(button=>button.addEventListener("click", addJobToUserList, 'addRemoveBtn'));
+
+  const addStatusButtons = document.querySelectorAll(".status span");
+  addStatusButtons.forEach(button=>button.addEventListener("click", updateStatusToTheDB));
+
+}, false);
