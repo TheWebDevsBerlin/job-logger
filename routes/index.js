@@ -21,10 +21,10 @@ function applyFilter(userId, data) {
           APIJob.slug === dbJob.job.id.slug && 
           APIJob.company.slug === dbJob.job.id.companySlug) {
             APIJob.inList = true;
-          };
-        })
-      })
-    })      
+          }
+        });
+      });
+    });
   })
   .catch(err=>next(err));
 }
