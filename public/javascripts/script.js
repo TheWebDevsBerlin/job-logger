@@ -77,7 +77,6 @@ function updateStatusToTheDB(e){
   })
   .then(res => {
     applyStatusToDashboard();
-    console.log(res);
   })
   .catch(err=>{
     console.log(err);
@@ -117,10 +116,8 @@ function addJobToUserList(e, responseAction = 'addAddBtn'){
     method: 'POST'
   })
   .then(res => {
-    console.log(res);
     if(res.status === 200){
       // delete element from list view
-      console.log(responseAction);
       switch(responseAction) {
         case "addRemoveBtn":
           e.target.innerText = 'Remove from list';

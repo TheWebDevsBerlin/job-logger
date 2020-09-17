@@ -43,11 +43,14 @@ router.get('/', (req, res, next) => {
         jobs.push(job);
       }
     }
+
+    jobs.sort((a,b)=>b.postedAt.localeCompare(a.postedAt));
     const data = {name: 'all', jobs: JSON.parse(JSON.stringify(jobs))};
     
     for(let job of data.jobs){
       job.logoUrl = job.company.websiteUrl
         .slice(job.company.websiteUrl.indexOf('//')+2);
+      job.loggedIn = req.session.user;
     }
 
     if(req.session.user) applyFilter(req.session.user._id, data);
@@ -79,6 +82,7 @@ router.post('/search', (req, res, next) => {
       for(let job of data.jobs) {
         job.logoUrl = job.company.websiteUrl
           .slice(job.company.websiteUrl.indexOf('//')+2);
+        job.loggedIn = req.session.user;
       }
       if(req.session.user) applyFilter(req.session.user._id, data);
     } 
@@ -114,8 +118,9 @@ router.post('/search', (req, res, next) => {
         for(let job of jobs){
           job.logoUrl = job.company.websiteUrl
             .slice(job.company.websiteUrl.indexOf('//')+2);
+          job.loggedIn = req.session.user;
         }
-  
+
         if(req.session.user) applyFilter(req.session.user._id, jobs);
       }
 

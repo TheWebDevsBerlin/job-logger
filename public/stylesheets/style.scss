@@ -15,6 +15,16 @@ main {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+
+  .title {
+    padding: 0 2rem;
+    blockquote {
+      font-size: 1.25rem;
+      border-left: 3px solid gray;
+      padding-left: 1rem;
+      margin-left: 1rem;
+    }
+  }
 }
 
 .card {
@@ -91,6 +101,11 @@ main {
 
   }
 }
+
+.card:hover {
+  background-color: #f2ebeb;
+}
+
 
 .controls {
   // display: flex;

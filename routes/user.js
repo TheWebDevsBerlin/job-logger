@@ -8,14 +8,12 @@ const {showQuote} = require('./middleware');
 
 router.get('/dashboard', (req, res, next) => {
   if (!req.session.user) res.redirect('/login');
-  console.log(showQuote)
+
   User.findOne({
       _id: req.session.user._id
     })
     .populate("jobs")
     .then(user => {
-      console.log(user.jobs[0].job.data.company.websiteUrl);
-
       for(let job of user.jobs) {
         job.job.data.logoUrl = job.job.data.company.websiteUrl
           .slice(job.job.data.company.websiteUrl.indexOf('//')+2);
@@ -25,7 +23,8 @@ router.get('/dashboard', (req, res, next) => {
         jobs: user.jobs,
         id: user._id,
         user: req.session.user,
-        dashboard: true
+        dashboard: true,
+        showQuote
       });
     })
     .catch(err => next(err));
@@ -39,8 +38,6 @@ router.post('/dashboard/statusUpdate/:jobId/:statusValue', (req, res, next) => {
       if(err) res.sendStatus(err);
       if(!user.status) user.status = {};
       user.status= {...user.status, [jobId]: +statusValue};
-
-      console.log("user.status",user.status);
 
       user.save(()=>res.sendStatus(200));
 

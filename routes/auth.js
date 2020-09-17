@@ -85,16 +85,15 @@ router.get('/edit', (req, res) => {
     username,
     _id
   } = req.user;
-  console.log(username, _id);
   User.findById(_id)
     .then(userFromDB => {
       res.render('auth/edit', {
         name: userFromDB
-      })
+      });
     })
     .catch(error => {
       next(error);
-    })
+    });
 });
 
 
@@ -117,7 +116,6 @@ router.post("/login", (req, res, next) => {
         return;
       }
       if (bcrypt.compareSync(password, user.password)) {
-        console.log(req.session);
         req.session.user = user;
         res.redirect('/');
       } else {

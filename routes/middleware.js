@@ -32,10 +32,10 @@ let quote = [
 'All our dreams can come true, if we have the courage to pursue them. —Walt Disney'
 ];
 let Pick = Math.floor(Math.random() * (quote.length));
-return Pick;
+return quote[Pick];
 }
 
 module.exports = {
-loginCheck: loginCheck, 
-showQuote: showQuote
+  loginCheck: loginCheck, 
+  showQuote: showQuote
 };
