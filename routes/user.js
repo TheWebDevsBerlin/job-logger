@@ -14,8 +14,9 @@ router.get('/dashboard', (req, res, next) => {
   User.findOne({
       _id: req.session.user._id
     })
+    .populate("jobs")
     .then(user => {
-      console.log(user);
+      console.log(user.jobs[0]);
       res.render('user/dashboard', {
           jobs: user.jobs,
           user: req.session.user,

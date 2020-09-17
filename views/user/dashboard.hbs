@@ -1,1 +1,22 @@
-Dashboard
+<h1>Welcome {{user.firstName}}</h1>
+<h4>Your new job awaits...</h4>
+
+<div class="full" id="job-list">
+
+      {{#each jobs}}
+      <div class="dash-card">
+            <img src="//logo.clearbit.com/{{logoUrl}}" alt="placeholder" onerror="this.src='/images/placeholder.png'">
+
+
+            <h2 class="info">{{job.id.slug}}</h2>
+            <h4>{{job.id.companySlug}}</h4>
+
+            <div class="dash-controls">
+                  <a href="/position/{{company.slug}}/{{slug}}">View job</a>
+                  <a>Notes</a>
+                  <a href="/user/job/add/{{slug}}/{{company.slug}}">Remove</a>
+            </div>
+      </div>
+      {{/each}}
+
+</div>

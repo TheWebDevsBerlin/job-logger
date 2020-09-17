@@ -88,4 +88,7 @@ app.use('/position', position);
 const user = require('./routes/user');
 app.use('/user', user);
 
+const dashboard = require('./routes/dashboard');
+app.use('/dashboard', dashboard);
+
 module.exports = app;
