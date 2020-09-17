@@ -41,21 +41,24 @@ router.get('/job/add/:title/:company', (req, res, next) => {
     }
   })
   .then(result => {
+    // result is response from API
     const data = result.data.data.job;
-    const job = new Job();
-    job.job.id = {
+    const job = {
+      id: {
         slug: data.slug,
         companySlug: data.company.slug
-      };
-    job.job.data = data;
+      },
+      data: data
+    }; 
     
     Job.findOne({
       slug: data.slug,
       companySlug: data.company.slug
     })
       .then(job_result => {
+        console.log(job_result);
         if (!job_result) {
-          job.save()
+          Job.create({job: job})
           .then(dbJob => {
             console.log({dbJob});
             User.findOne({
@@ -86,7 +89,6 @@ router.get('/job/add/:title/:company', (req, res, next) => {
         }
       });
   });
-
 });
 
 module.exports = router;
