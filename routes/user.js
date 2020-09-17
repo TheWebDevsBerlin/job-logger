@@ -89,6 +89,4 @@ router.get('/job/add/:title/:company', (req, res, next) => {
 
 });
 
-
-
 module.exports = router;
