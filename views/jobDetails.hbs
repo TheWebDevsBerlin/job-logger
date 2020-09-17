@@ -1,6 +1,6 @@
   <section>
     {{#with data}}
-      <div class="full" id="">
+      <div class="full">
         <div class="">
           <div class="header">
             <figure>
@@ -23,15 +23,18 @@
                 <b>{{commitment.title}}</b>
               {{/if}}
             </div>
+            <div class="controls">
+              <a href="/">Back to job list</a>
+              <a href="#" class="add-job-to-list full-view" slug="{{slug}}" companySlug="{{company.slug}}">Add to list</a>
+              {{#if applyUrl}}
+                <a href="{{applyUrl}}">Apply now</a>
+              {{/if}}
+            </div>
           </div>
             
           <div class="info">
             {{#if description}}
               <p>{{{filter description "markdown"}}}</p>
-            {{/if}}
-
-            {{#if applyUrl}}
-              <p><a href="{{applyUrl}}">Apply now</a></p>
             {{/if}}
 
             {{#if url}}
@@ -49,11 +52,11 @@
               <time datetime="{{postedAt}}"><span>Published at {{postedAt}}</span></time>
             {{/if}}
           </div>
-          <div class="controls">
+          {{!-- <div class="controls">
             <a href="/position/{{company.slug}}/{{slug}}">Full View</a>
             <a href="/favorite/{{id}}">Add to list</a>
             <a href="/status/{{id}}">Status</a>
-          </div>
+          </div> --}}
         </div>
       {{/with}}
     </div>

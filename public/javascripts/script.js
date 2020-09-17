@@ -1,6 +1,38 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+  function addJobToUserList(e, responseAction = 'addAddBtn'){
+    const slug = e.target.getAttribute('slug')
+    const companySlug = e.target.getAttribute('companySlug');
+
+    axios({
+      url: `/user/job/add/${slug}/${companySlug}`,
+      method: 'POST'
+    })
+    .then(res => {
+      console.log(res);
+      if(res.status === 200){
+        // delete element from list view
+        console.log(responseAction);
+        switch(responseAction) {
+          case "addRemoveBtn":
+            e.target.innerText = 'Remove from list';
+            e.target.removeEventListener("click", addJobToUserList);
+            e.target.addEventListener("click", removeJobFromUserList, 'addAddBtn');
+            break;
+          default: 
+            e.target.parentNode.parentNode.remove();
+        }
+      }
+    });
+  }
+
   console.log('IronGenerator JS imported successfully!');
+
+  const addListViewButton = document.querySelectorAll(".add-job-to-list.list-view");
+  addListViewButton.forEach(button=>button.addEventListener("click", addJobToUserList));
+
+  const addFullViewButton = document.querySelectorAll(".add-job-to-list.full-view");
+  addFullViewButton.forEach(button=>button.addEventListener("click", addJobToUserList, 'addRemoveBtn'));
 
 }, false);
 
