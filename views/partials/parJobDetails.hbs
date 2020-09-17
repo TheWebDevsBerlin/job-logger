@@ -47,9 +47,9 @@
     </div>
     <div class="controls">
       <a href="/position/{{company.slug}}/{{slug}}">View details</a>
-      {{!-- {{#if user}} --}}
+      {{#if loggedIn}}
         <a href="" class="add-job-to-list list-view" slug="{{slug}}" companySlug="{{company.slug}}">Add to My Jobs</a>
-      {{!-- {{/if}} --}}
+      {{/if}}
     </div>
   </div>
 {{/with}}
