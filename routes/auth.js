@@ -97,37 +97,6 @@ router.get('/edit', (req, res) => {
     })
 });
 
-router.post(
-  "/user/edit", (req, res) => {
-    console.log("this is the request", req.body, req.user)
-    const {
-      username
-    } = req.body;
-    User.findByIdAndUpdate(req.user._id, {
-        username
-      })
-
-      .then(user => {
-        res.redirect(`/`);
-      })
-      .catch(err => {
-        next(err);
-      });
-  }
-);
-
-router.get('/delete', (req, res) => {
-  const id = req.user._id;
-  User.findByIdAndDelete(id)
-    .then(() => {
-      res.redirect('/');
-      console.log(req.body);
-    })
-    .catch(error => {
-      console.log(error);
-    })
-});
-
 
 router.post("/login", (req, res, next) => {
   const username = req.body.username;
