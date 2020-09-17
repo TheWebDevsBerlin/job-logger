@@ -1,6 +1,7 @@
 const express = require('express');
 const router  = express.Router();
 const axios = require('axios');
+const {searchByID} = require('../queries');
 
 router.get('/:company/:job', (req, res, next) => {
   const {company, job} = req.params;
@@ -8,40 +9,9 @@ router.get('/:company/:job', (req, res, next) => {
     url: 'https://api.graphql.jobs/',
     method: 'POST',
     data: {
-      query: `
-      query {
-        job(input: {
-          jobSlug:"${job}"
-          companySlug:"${company}"
-        }){
-          title
-          commitment{
-            title
-          }
-          description
-          applyUrl
-          company{
-            name
-            websiteUrl
-            jobs{title}
-            logoUrl
-          }
-          locationNames
-          remotes{name}
-          cities{
-            name
-            country {name}
-            type
-            slug
-            jobs {
-              id
-              title
-            }
-          }
-          postedAt
-        }
-      }
-  `}})
+      query: searchByID(company,job)
+    }
+  })
     .then(result => {
       const data = result.data.data.job;
       data.logoUrl = data.company.websiteUrl.slice(data.company.websiteUrl.indexOf('//')+2);
