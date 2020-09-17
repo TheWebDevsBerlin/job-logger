@@ -4,9 +4,30 @@ const axios = require('axios');
 const User = require('../models/User');
 const Job = require('../models/Job');
 
-const {allJobs} = require('../queries');
+const {allJobs, searchByLocation} = require('../queries');
 
 const googleMapsApi = `https://maps.googleapis.com/maps/api/js?key=${process.env.API_KEY}&callback=initMap&libraries=places&v=weekly`;
+
+function applyFilter(userId, data) {
+  User.findById(userId)
+  .populate('job')
+  .then(dbUser=>{
+    
+    data.jobs.forEach(APIJob => {
+      dbUser.jobs.forEach(jobId => {
+      Job.findById(jobId)
+      .then(dbJob=>{
+        if(
+          APIJob.slug === dbJob.job.id.slug && 
+          APIJob.company.slug === dbJob.job.id.companySlug) {
+            APIJob.inList = true;
+          };
+        })
+      })
+    })      
+  })
+  .catch(err=>next(err));
+}
 
 router.get('/', (req, res, next) => {
   axios({
@@ -30,24 +51,7 @@ router.get('/', (req, res, next) => {
         .slice(job.company.websiteUrl.indexOf('//')+2);
     }
 
-    if(req.session.user) {
-      console.log('connecting and bringing jobs');
-      User.findById(req.session.user._id)
-      .populate('job')
-      .then(dbUser=>{
-        dbUser.jobs.forEach(jobId=>{
-          console.log({jobId});
-          Job.findById({_id: jobId})
-            .then(job=>{
-              console.log({ALL:jobs[0].slug});
-              console.log({ALL:jobs[0].company.slug});
-              console.log({title: job._id});
-              // console.log({company: job.data.company.slug});
-            });
-        });
-      })
-      .catch(err=>next(err));
-    }
+    if(req.session.user) applyFilter(req.session.user._id, data);
 
     res.render('index',{
       data, 
@@ -73,15 +77,14 @@ router.post('/search', (req, res, next) => {
   .then(result => {
     const data = result.data.data.city;
     if(data) {
-      console.log({data});
       for(let job of data.jobs) {
         job.logoUrl = job.company.websiteUrl
           .slice(job.company.websiteUrl.indexOf('//')+2);
       }
+      if(req.session.user) applyFilter(req.session.user._id, data);
     } 
 
-    const searchQuery = {location,title};
-    console.log(searchQuery);
+    const searchQuery = { location, title };
 
     res.render('index',{
       data,
@@ -91,38 +94,45 @@ router.post('/search', (req, res, next) => {
     });
   })
   .catch((err) => {
-      // no city selected logic
-      axios({
-        url: 'https://api.graphql.jobs/',
-        method: 'POST',
-        data: {
-          query: allJobs(title)
-        }
-      })
-      .then(result => {
-        let jobs = [];
+    // no city selected logic
+    axios({
+      url: 'https://api.graphql.jobs/',
+      method: 'POST',
+      data: {
+        query: allJobs(title)
+      }
+    })
+    .then(result => {
+      let jobs = [];
+
+      if(result.data.data.cities){
         for(let city of result.data.data.cities){
           for(let job of city.jobs){
             jobs.push(job);
           }
         }
-        const data = {name: 'all', jobs: JSON.parse(JSON.stringify(jobs))};
-        const searchQuery = {location: '',title};
-    
-        for(let job of this){
+
+        for(let job of jobs){
           job.logoUrl = job.company.websiteUrl
             .slice(job.company.websiteUrl.indexOf('//')+2);
         }
-          
-        res.render('index',{
-          data,
-          searchQuery,
-          googleMapsApi,
-          user: req.session.user
-        });
-    
-      })
-      .catch(err => next(err)); 
+  
+        if(req.session.user) applyFilter(req.session.user._id, jobs);
+      }
+
+      const data = {name: 'all', jobs: JSON.parse(JSON.stringify(jobs))};
+
+      const searchQuery = {location: '',title};      
+
+      res.render('index',{
+        data,
+        searchQuery,
+        googleMapsApi,
+        user: req.session.user
+      });
+  
+    })
+    .catch(err => next(err)); 
   });
 });
 

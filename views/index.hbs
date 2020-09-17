@@ -8,7 +8,9 @@
   </header>
   <div class="container" id="job-list">
     {{#each data.jobs}}
-      {{> parJobDetails this }}
+      {{#unless this.inList}}
+        {{> parJobDetails this }}
+      {{/unless}}
     {{/each}}
   </div>
   <div class="container" id="jobs-map"></div>

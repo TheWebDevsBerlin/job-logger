@@ -43,6 +43,7 @@ query {
     companySlug:"${company}"
   }) {
   title
+  slug
   commitment {
     title
     slug

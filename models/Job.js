@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 const jobSchema = new Schema({
   job: {
     id: {
-      title: String,
-      company: String
+      slug: String,
+      companySlug: String
     },
     data: {}
   }
