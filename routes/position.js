@@ -25,10 +25,3 @@ router.get('/:company/:job', (req, res, next) => {
 });
 
 module.exports = router;
-
-/*
-job(input:{
-  jobSlug:"senior-fullstack-engineer-platform"
-  companySlug:"segment"
-}){id}
-*/

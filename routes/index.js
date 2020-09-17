@@ -10,7 +10,6 @@ const googleMapsApi = `https://maps.googleapis.com/maps/api/js?key=${process.env
 
 function applyFilter(userId, data) {
   User.findById(userId)
-  .populate('job')
   .then(dbUser=>{
     
     data.jobs.forEach(APIJob => {
@@ -146,3 +145,4 @@ router.get("/private-page", (req, res) => {
 });
 
 module.exports = router;
+

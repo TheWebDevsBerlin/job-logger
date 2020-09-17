@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   function addJobToUserList(e, responseAction = 'addAddBtn'){
+    e.preventDefault();
     const slug = e.target.getAttribute('slug')
     const companySlug = e.target.getAttribute('companySlug');
 
@@ -26,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  console.log('IronGenerator JS imported successfully!');
+  console.log('JS imported successfully!');
 
   const addListViewButton = document.querySelectorAll(".add-job-to-list.list-view");
   addListViewButton.forEach(button=>button.addEventListener("click", addJobToUserList));
@@ -34,10 +35,30 @@ document.addEventListener('DOMContentLoaded', () => {
   const addFullViewButton = document.querySelectorAll(".add-job-to-list.full-view");
   addFullViewButton.forEach(button=>button.addEventListener("click", addJobToUserList, 'addRemoveBtn'));
 
+  const addStatusButtons = document.querySelectorAll(".status span");
+  addStatusButtons.forEach(button=>button.addEventListener("click", updateStatusToTheDB));
+
 }, false);
 
 let map;
 let markers = [];
+
+function updateStatusToTheDB(e){
+  const jobId = e.target.getAttribute('id');
+  const status = e.target.getAttribute('status');
+  axios({
+    url: `/user/dashboard/statusUpdate/${jobId}/${status}`,
+    method: 'POST'
+  })
+  .then(res => {
+    console.log(res);
+  })
+  .catch(err=>{
+    console.log(err);
+  });
+}
+
+
 
 function populateSearchboxLocation(val) {
   axios({

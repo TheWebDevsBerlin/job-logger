@@ -15,7 +15,7 @@
   <main>
     <header>
       <div class="left">
-        <h1>{{title}}</h1>
+        <h1>{{title}}</h1> 
       </div>
       <nav>
         {{#unless user}}
@@ -23,18 +23,15 @@
         <a href="/signup">Sign Up</a>
         {{else}}
         <b>Logged in as {{user.username}}</b>&nbsp;
-        {{#unless dashboard}}
-          <a href="/user/dashboard">My Dashboard</a>
-        {{/unless}}
         <a href="/logout">Logout</a>
-        {{!-- place holder
-        <a href="/myJobs">My Jobs</a>
-        <a href="/edit">edit username</a>
-        <a href="/delete">delete account</a> --}}
+        {{/unless}}
+        {{#unless dashboard}}
+          <a href="/user/dashboard">My Jobs</a>
         {{/unless}}
         {{#if dashboard}}
-        <a href="/">Home</a>
+        <a href="/">Job list</a>
         {{/if}}
+        
       </nav>
     </header>
     {{{body}}}

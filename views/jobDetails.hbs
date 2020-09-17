@@ -24,8 +24,8 @@
               {{/if}}
             </div>
             <div class="controls">
-              <a href="/">Back to job list</a>
-              <a href="#" class="add-job-to-list full-view" slug="{{slug}}" companySlug="{{company.slug}}">Add to list</a>
+              <a href="javascript:history.back()">Back to job list</a>
+              <a href="#" class="add-job-to-list full-view" slug="{{slug}}" companySlug="{{company.slug}}">Add to My Jobs</a>
               {{#if applyUrl}}
                 <a href="{{applyUrl}}">Apply now</a>
               {{/if}}
@@ -52,11 +52,6 @@
               <time datetime="{{postedAt}}"><span>Published at {{postedAt}}</span></time>
             {{/if}}
           </div>
-          {{!-- <div class="controls">
-            <a href="/position/{{company.slug}}/{{slug}}">Full View</a>
-            <a href="/favorite/{{id}}">Add to list</a>
-            <a href="/status/{{id}}">Status</a>
-          </div> --}}
         </div>
       {{/with}}
     </div>

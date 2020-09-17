@@ -53,6 +53,17 @@ main {
     margin-left: 1rem;
     padding-left: 1rem;
     border-left: 1px dashed black;
+
+    .status span {
+      padding: 0.5rem;
+      border: 1px dashed black;
+      border-radius: 0.5rem;
+      margin-right: 1rem;
+
+      .active {
+        background-color: yellowgreen;
+      }
+    }
   }
 
 }

@@ -11,6 +11,7 @@ const userSchema = new Schema({
     city: String,
     zip: Number,
   },
+  status: Object,
   jobs: [{
     type: Schema.Types.ObjectId,
     ref: 'Job'
