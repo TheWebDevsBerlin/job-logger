@@ -1,7 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
-const {searchByLocation, allJobs} = require('../queries');
+const User = require('../models/User');
+const Job = require('../models/Job');
+
+const {allJobs} = require('../queries');
+
 const googleMapsApi = `https://maps.googleapis.com/maps/api/js?key=${process.env.API_KEY}&callback=initMap&libraries=places&v=weekly`;
 
 router.get('/', (req, res, next) => {
@@ -24,6 +28,25 @@ router.get('/', (req, res, next) => {
     for(let job of data.jobs){
       job.logoUrl = job.company.websiteUrl
         .slice(job.company.websiteUrl.indexOf('//')+2);
+    }
+
+    if(req.session.user) {
+      console.log('connecting and bringing jobs');
+      User.findById(req.session.user._id)
+      .populate('job')
+      .then(dbUser=>{
+        dbUser.jobs.forEach(jobId=>{
+          console.log({jobId});
+          Job.findById({_id: jobId})
+            .then(job=>{
+              console.log({ALL:jobs[0].slug});
+              console.log({ALL:jobs[0].company.slug});
+              console.log({title: job._id});
+              // console.log({company: job.data.company.slug});
+            });
+        });
+      })
+      .catch(err=>next(err));
     }
 
     res.render('index',{

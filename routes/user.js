@@ -49,7 +49,6 @@ router.get('/job/add/:title/:company', (req, res, next) => {
       };
     job.job.data = data;
     
-
     Job.findOne({
       slug: data.slug,
       companySlug: data.company.slug
@@ -64,12 +63,15 @@ router.get('/job/add/:title/:company', (req, res, next) => {
             })
             .then(user => {
               console.log({user});
-              user.jobs.push(dbJob._id)
+              user.jobs.push(dbJob._id);
               user.save()
-              .then(dbUser=>console.log({dbUser}))
+              .then(dbUser=>{
+                console.log({dbUser});
+                res.redirect('/');
+              })
               .catch(err=>next(err));
             })
-            .catch(err=>next(err))
+            .catch(err=>next(err));
           })
           .catch(err=>next(err));
         } else {
@@ -77,9 +79,10 @@ router.get('/job/add/:title/:company', (req, res, next) => {
             _id: req.session.user._id
           })
           .then(user => {
-            user.jobs.push(dbJob._id)
+            user.jobs.push(dbJob._id);
+            res.redirect('/');
           })
-          .catch(err=>next(err))
+          .catch(err=>next(err));
         }
       });
   });
