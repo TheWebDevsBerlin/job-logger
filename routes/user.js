@@ -38,7 +38,7 @@ router.post('/dashboard/statusUpdate/:jobId/:statusValue', (req, res, next) => {
     User.findById(req.session.user._id, (err, user) => {
       if(err) res.sendStatus(err);
       if(!user.status) user.status = {};
-      user.status[jobId] = +statusValue;
+      user.status= {...user.status, [jobId]: +statusValue};
 
       console.log("user.status",user.status);
 
@@ -46,8 +46,18 @@ router.post('/dashboard/statusUpdate/:jobId/:statusValue', (req, res, next) => {
 
     });
   }
-
 });
+
+router.get('/dashboard/statusImport', (req, res, next) => {
+  if(req.session.user) {
+
+    User.findById(req.session.user._id, (err, user) => {
+      if(err) res.sendStatus(err);
+      if(user.status) res.send(user.status);
+    });
+  }
+});
+
 //edit and delete functionality
 
 // router.get('/dashboard/deleteJob', (req, res) => {
