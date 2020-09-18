@@ -37,7 +37,7 @@ router.post('/dashboard/statusUpdate/:jobId/:statusValue', (req, res, next) => {
     User.findById(req.session.user._id, (err, user) => {
       if(err) res.sendStatus(err);
       if(!user.status) user.status = {};
-      user.status= {...user.status, [jobId]: +statusValue};
+      user.status = {...user.status, [jobId]: +statusValue};
 
       user.save(()=>res.sendStatus(200));
 
@@ -150,6 +150,25 @@ router.post('/job/add/:title/:company', (req, res, next) => {
         }
       });
   });
+});
+
+
+router.post('/job/remove/:title/:company/:id?', (req, res, next) => {
+  if (!req.session.user) res.redirect('/login');
+  const {
+    title,
+    company,
+    id
+  } = req.params;
+
+  User.findById(req.session.user._id)
+  .populate('jobs')
+  .then(user => {
+    if(user.jobs.find(i => i._id == id)) {user.jobs.find(i => i._id == id).remove();} else {console.log('no job found');}
+    if(user.status['id-'+id]) {delete user.status[`id-${id}`];} else {console.log('no status found');}
+    user.save(() => res.sendStatus(200));
+  })
+  .catch(err=>next(err));
 });
 
 module.exports = router;

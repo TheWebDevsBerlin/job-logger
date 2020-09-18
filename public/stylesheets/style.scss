@@ -106,10 +106,7 @@ main {
   background-color: #f2ebeb;
 }
 
-
 .controls {
-  // display: flex;
-  // flex: 1;
   max-width: 10rem;
   flex-direction: column;
   justify-content: space-evenly;
@@ -241,10 +238,13 @@ nav a {
   font-weight: bold;
 }
 
-section {
-  display: flex;
-  flex-wrap: wrap;
-  height: 72.5vh;
+section.app_body {
+  height: 92.5vh;
+  section {
+    height: 92.5vh;
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 
 .container {
@@ -257,7 +257,6 @@ section {
   height: 91.75vh;
   overflow: auto;
   padding: 0 2rem 0 0;
-  border-right: 2px solid rgba(64,64,64,1);
 
   img {
     width: 150px;
@@ -278,11 +277,37 @@ section {
   }
 }
 
-
-#job-list {
-  height: 100%;
+.job-list {
+  padding-right: 0;
   overflow-y: auto;
   background-color: rgb(180, 205, 226);
+}
+
+.container.job-list {
+  height: 68vh;
+}
+
+
+.full.job-list {
+  height: 81.25vh;
+}
+  
+footer {
+  display: flex;
+  flex: 1;
+  height: 1rem;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid black;
+  background-color: white;
+    
+  p {
+    margin: 0 1rem;
+  }
+}
+
+.full footer {
+  height: 4rem;
 }
 
 .auth {
@@ -312,81 +337,3 @@ section {
   margin: 0.5rem 0.5rem;
   color: white;
   font-weight: bold; }
-
-
-
-
-
-  
-.dash-card {
-  margin: 0.5rem 0 0.5rem 0.5rem;
-  box-shadow: -2px 2px 5px 1.5px rgba(128, 128, 128, 0.75);
-  padding: 1rem;
-  display: flex;
-  background-color: white;
-  border-radius: 25px 0 0 25px;
-  overflow: hidden;
-  
-  h1, h2, h3 {
-    margin-top: 0.15rem;
-    margin-bottom: 0.15rem;
-  }
-
-  figure {
-    display: flex;
-    flex: 0;
-    margin: 0 0.5rem;
-    justify-content: center;
-    align-self: center;
-    
-    width: 125px;
-    height: 125px;
-
-    img {
-      width: inherit;
-      border-radius: 15%;
-    }
-  }
-  .info {
-    display: flex;
-    flex: 2;
-    flex-direction: column;
-    margin-left: 1rem;
-    padding-left: 1rem;
-    border-left: 1px dashed black;
-  }
-
-  .dash-controls {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: flex-end;
-    text-align: center;
-    
-
-    
-
-    a {
-      width: 4rem;
-      height: 2.5rem;
-      box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.25);
-      background: rgba(128,128,128,0.25);
-      text-decoration: none;
-      font-weight: bold;
-      text-align: center;
-      border-radius: 1rem 0 0 1rem;
-      padding: 0 0.5rem;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    a:hover {
-      background-color: #d0d0d0;
-      top: 1px;
-      position: relative;
-      left: 1px;
-    }
-  }
-}
-  

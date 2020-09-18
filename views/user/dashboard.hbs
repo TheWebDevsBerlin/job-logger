@@ -3,7 +3,7 @@
   <blockquote>{{showQuote}}</blockquote>
 </div>
 
-<div class="full" id="job-list">
+<div class="full job-list">
 
   {{#each jobs}}
   <div class="card dash" id="{{id}}">
@@ -27,10 +27,10 @@
     <div class="controls">
       <a href="/position/{{job.id.companySlug}}/{{job.id.slug}}">View job</a>
       <a>Notes</a>
-      <a href="/user/job/remove/{{job.id.slug}}/{{job.id.companySlug}}">Remove</a>
+      <a class='addRemoveBtn' action='remove' jobId='{{id}}' slug='{{job.id.slug}}' companySlug='{{job.id.companySlug}}'>Remove</a>
     </div>
   </div>
   {{/each}}
-
+  {{> footer}}
 </div>
 <script src="/javascripts/dashboard.js"></script>

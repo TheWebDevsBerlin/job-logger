@@ -25,7 +25,7 @@
             </div>
             <div class="controls">
               <a href="javascript:history.back()">Back to job list</a>
-              <a href="#" class="add-job-to-list full-view" slug="{{slug}}" companySlug="{{company.slug}}">Add to My Jobs</a>
+              <a class="add-job-to-list full-view" action='add' slug="{{slug}}" companySlug="{{company.slug}}">Add to My Jobs</a>
               {{#if applyUrl}}
                 <a href="{{applyUrl}}">Apply now</a>
               {{/if}}

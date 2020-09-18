@@ -6,7 +6,7 @@
       <button type="submit">Search</button>
     </form>
   </header>
-  <div class="container" id="job-list">
+  <div class="container job-list">
     {{#each data.jobs}}
       {{#unless this.inList}}
         {{> parJobDetails this }}
@@ -14,5 +14,6 @@
     {{/each}}
   </div>
   <div class="container" id="jobs-map"></div>
+  {{> footer}}
 </section>
 <script>populateSearchboxLocation("{{searchQuery.location}}");</script>

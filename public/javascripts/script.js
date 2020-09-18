@@ -106,11 +106,11 @@ function populateSearchboxLocation(val) {
   });
 }
 
-function addJobToUserList(e, responseAction = 'addAddBtn'){
+function addJobToUserList(e){
   e.preventDefault();
   const slug = e.target.getAttribute('slug')
   const companySlug = e.target.getAttribute('companySlug');
-
+  const responseAction = e.target.getAttribute('action'); //addAddBtn
   axios({
     url: `/user/job/add/${slug}/${companySlug}`,
     method: 'POST'
@@ -119,10 +119,40 @@ function addJobToUserList(e, responseAction = 'addAddBtn'){
     if(res.status === 200){
       // delete element from list view
       switch(responseAction) {
-        case "addRemoveBtn":
-          e.target.innerText = 'Remove from list';
+        case "add":
           e.target.removeEventListener("click", addJobToUserList);
-          e.target.addEventListener("click", removeJobFromUserList, 'addAddBtn');
+          e.target.addEventListener("click", removeJobFromUserList);
+          e.target.setAttribute('action','remove');
+          e.target.innerText = 'Remove from list';
+          break;
+        default: 
+          e.target.parentNode.parentNode.remove();
+      }
+    }
+  });
+}
+
+function removeJobFromUserList(e){
+  e.preventDefault();
+  const slug = e.target.getAttribute('slug')
+  const companySlug = e.target.getAttribute('companySlug');
+  const jobId = e.target.getAttribute('jobId');
+  const responseAction = e.target.getAttribute('action'); //removeBtn'
+
+  console.log(e, slug, companySlug, jobId);
+  axios({
+    url: `/user/job/remove/${slug}/${companySlug}/${jobId}`,
+    method: 'POST'
+  })
+  .then(res => {
+    if(res.status === 200){
+      // delete element from list view
+      switch(responseAction) {
+        case "add":
+          e.target.removeEventListener("click", removeJobFromUserList);
+          e.target.addEventListener("click", addJobToUserList);
+          e.target.setAttribute('action','add');
+          e.target.innerText = 'Add to list';
           break;
         default: 
           e.target.parentNode.parentNode.remove();
@@ -144,4 +174,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const addStatusButtons = document.querySelectorAll(".status span");
   addStatusButtons.forEach(button=>button.addEventListener("click", updateStatusToTheDB));
 
+  const addRemoveButtons = document.querySelectorAll(".controls>.addRemoveBtn");
+  addRemoveButtons.forEach(button=>{
+    if(button.getAttribute('action')==='add') 
+      button.addEventListener('click', addJobToUserList);
+
+    if(button.getAttribute('action')==='remove') 
+      button.addEventListener('click', removeJobFromUserList);
+  });
 }, false);
