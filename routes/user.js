@@ -55,42 +55,6 @@ router.get('/dashboard/statusImport', (req, res, next) => {
   }
 });
 
-//edit and delete functionality
-
-// router.get('/dashboard/deleteJob', (req, res) => {
-//   const id = req.job._id;
-//   Job.findByIdAndDelete(id)
-//     .then(() => {
-//       res.redirect('/dashboard');
-//       console.log(req.body);
-//     })
-//     .catch(error => {
-//       console.log(error);
-//     });
-// });
-
-
-// router.post(
-//   "/dashboard/editJobNotes", (req, res) => {
-//     console.log("this is the request", req.body, req.job)
-//     const {
-//       title, description
-//     } = req.body;
-//     Job.findByIdAndUpdate(req.job._id, {
-//         title, description
-//       })
-
-//       .then(job => {
-//         res.redirect(`/`);
-//       })
-//       .catch(err => {
-//         next(err);
-//       });
-//   }
-// );
-
-
-
 router.post('/job/add/:title/:company', (req, res, next) => {
   if (!req.session.user) res.redirect('/login');
   const {
@@ -155,20 +119,26 @@ router.post('/job/add/:title/:company', (req, res, next) => {
 
 router.post('/job/remove/:title/:company/:id?', (req, res, next) => {
   if (!req.session.user) res.redirect('/login');
-  const {
-    title,
-    company,
-    id
-  } = req.params;
+  const {id} = req.params;
 
-  User.findById(req.session.user._id)
-  .populate('jobs')
-  .then(user => {
-    if(user.jobs.find(i => i._id == id)) {user.jobs.find(i => i._id == id).remove();} else {console.log('no job found');}
-    if(user.status['id-'+id]) {delete user.status[`id-${id}`];} else {console.log('no status found');}
-    user.save(() => res.sendStatus(200));
+  Job.deleteOne({_id: id}).then((jobResponse)=>{
+    User.findOne({_id: req.session.user})
+    .populate('jobs')
+    .then(user => {
+      if(user.status) {
+        delete user.status['id-'+id];
+        newStatus = {...user.status};
+      }
+      if(user.jobs){
+        newJobs = [...user.jobs].filter(i => i._id.toString() !== id);
+      }
+      User.findByIdAndUpdate(req.session.user, {jobs: newJobs, status: newStatus}, (userResponse)=>{
+        res.sendStatus(200);
+      });
+    })
+    .catch(err=>console.log(err));
   })
-  .catch(err=>next(err));
+  .catch(err=>console.log(err));
 });
 
 module.exports = router;
