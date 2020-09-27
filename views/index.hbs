@@ -1,12 +1,14 @@
 <section>
   <header class="search">
     <form action="/search" method="POST">
-      <select name="location" id="location"></select>
-      <input type="text" name="title" id="title" value="{{searchQuery.title}}" placeholder="Enter your desired title">
+      <div>
+        <select name="location" id="location"></select>
+        <input type="text" name="title" id="title" value="{{searchQuery.title}}" placeholder="Enter your desired title">
+      </div>
       <button type="submit">Search</button>
     </form>
   </header>
-  <div class="container" id="job-list">
+  <div class="container job-list">
     {{#each data.jobs}}
       {{#unless this.inList}}
         {{> parJobDetails this }}
@@ -14,5 +16,13 @@
     {{/each}}
   </div>
   <div class="container" id="jobs-map"></div>
+  {{> footer}}
 </section>
-<script>populateSearchboxLocation("{{searchQuery.location}}");</script>
+<script>
+  var jobs = [];
+  "{{#each data.jobs}}"
+    var city = "{{this.cities.0.name}} {{this.cities.0.country.name}}";
+    var title = "{{this.title}}";
+    jobs.push({city, title}); 
+  "{{/each}}"
+</script>

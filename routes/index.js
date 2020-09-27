@@ -6,7 +6,7 @@ const Job = require('../models/Job');
 
 const {allJobs, searchByLocation} = require('../queries');
 
-const googleMapsApi = `https://maps.googleapis.com/maps/api/js?key=${process.env.API_KEY}&callback=initMap&libraries=places&v=weekly`;
+const googleMapsApi = `https://maps.googleapis.com/maps/api/js?key=${process.env.API_KEY}&libraries=places&v=weekly`;
 
 function applyFilter(userId, data) {
   User.findById(userId)
@@ -17,12 +17,13 @@ function applyFilter(userId, data) {
       Job.findById(jobId)
       .then(dbJob=>{
         if(
+          dbJob && dbJob.job &&
           APIJob.slug === dbJob.job.id.slug && 
           APIJob.company.slug === dbJob.job.id.companySlug) {
             APIJob.inList = true;
           }
-        });
-      });
+        })
+      }).catch(err=>next(err));
     });
   })
   .catch(err=>next(err));

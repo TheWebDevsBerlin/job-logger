@@ -37,7 +37,7 @@ router.post('/dashboard/statusUpdate/:jobId/:statusValue', (req, res, next) => {
     User.findById(req.session.user._id, (err, user) => {
       if(err) res.sendStatus(err);
       if(!user.status) user.status = {};
-      user.status= {...user.status, [jobId]: +statusValue};
+      user.status = {...user.status, [jobId]: +statusValue};
 
       user.save(()=>res.sendStatus(200));
 
@@ -54,42 +54,6 @@ router.get('/dashboard/statusImport', (req, res, next) => {
     });
   }
 });
-
-//edit and delete functionality
-
-// router.get('/dashboard/deleteJob', (req, res) => {
-//   const id = req.job._id;
-//   Job.findByIdAndDelete(id)
-//     .then(() => {
-//       res.redirect('/dashboard');
-//       console.log(req.body);
-//     })
-//     .catch(error => {
-//       console.log(error);
-//     });
-// });
-
-
-// router.post(
-//   "/dashboard/editJobNotes", (req, res) => {
-//     console.log("this is the request", req.body, req.job)
-//     const {
-//       title, description
-//     } = req.body;
-//     Job.findByIdAndUpdate(req.job._id, {
-//         title, description
-//       })
-
-//       .then(job => {
-//         res.redirect(`/`);
-//       })
-//       .catch(err => {
-//         next(err);
-//       });
-//   }
-// );
-
-
 
 router.post('/job/add/:title/:company', (req, res, next) => {
   if (!req.session.user) res.redirect('/login');
@@ -150,6 +114,31 @@ router.post('/job/add/:title/:company', (req, res, next) => {
         }
       });
   });
+});
+
+
+router.post('/job/remove/:title/:company/:id?', (req, res, next) => {
+  if (!req.session.user) res.redirect('/login');
+  const {id} = req.params;
+
+  Job.deleteOne({_id: id}).then((jobResponse)=>{
+    User.findOne({_id: req.session.user})
+    .populate('jobs')
+    .then(user => {
+      if(user.status) {
+        delete user.status['id-'+id];
+        newStatus = {...user.status};
+      }
+      if(user.jobs){
+        newJobs = [...user.jobs].filter(i => i._id.toString() !== id);
+      }
+      User.findByIdAndUpdate(req.session.user, {jobs: newJobs, status: newStatus}, (userResponse)=>{
+        res.sendStatus(200);
+      });
+    })
+    .catch(err=>console.log(err));
+  })
+  .catch(err=>console.log(err));
 });
 
 module.exports = router;
