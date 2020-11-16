@@ -40,7 +40,7 @@ main {
   border-radius: 1.8rem 0 0 1.8rem;
   overflow: hidden;
   position: relative;
-  transition: left 1s ease-in;
+  transition: left 0.5s ease-in;
   left: 0; }
   .card h1, .card h2, .card h3 {
     margin-top: 0.15rem;
